@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shashikant D. Jituri | Full Stack Developer | AI/ML Engineer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(40px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .timeline-line {
+            @apply absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-blue-500 to-purple-600 h-full;
+        }
+
+        .timeline-dot {
+            @apply w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 shadow-lg;
+        }
+
+        /* Certificate PDF Viewer Styles */
+        .cert-tab {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .cert-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .cert-tab:not(.active):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .pdf-frame-wrapper {
+            position: relative;
+            background: #f8f9fa;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .pdf-frame-wrapper iframe {
+            border: none;
+            width: 100%;
+            height: 600px;
+            display: block;
+        }
+
+        .pdf-loading {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f0f4ff, #f5f0ff);
+            z-index: 2;
+            transition: opacity 0.5s ease;
+        }
+
+        .pdf-loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .cert-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-xl z-50 shadow-lg transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold gradient-text">Shashikant Jituri</div>
+            <ul class="md:flex hidden space-x-8">
+                <li><a href="#hero" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
+                </li>
+                <li><a href="#about" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">About</a>
+                </li>
+                <li><a href="#skills" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Skills</a>
+                </li>
+                <li><a href="#experience"
+                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Experience</a></li>
+                <li><a href="#projects"
+                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Projects</a></li>
+                <li><a href="#education"
+                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Education</a></li>
+                <li><a href="#certifications"
+                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Certifications</a></li>
+                <li><a href="#contact"
+                        class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Contact</a></li>
+            </ul>
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="space-y-2 w-6 h-6 flex flex-col justify-center items-end">
+                    <span class="block w-full h-0.5 bg-gray-700 rounded transition-transform"></span>
+                    <span class="block w-full h-0.5 bg-gray-700 rounded transition-transform"></span>
+                    <span class="block w-3/4 h-0.5 bg-gray-700 rounded transition-transform"></span>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t shadow-lg">
+            <ul class="px-6 py-4 space-y-4">
+                <li><a href="#hero" class="block py-2 text-gray-700 hover:text-blue-600 font-medium">Home</a></li>
+                <li><a href="#about" class="block py-2 text-gray-700 hover:text-blue-600 font-medium">About</a></li>
+                <li><a href="#skills" class="block py-2 text-gray-700 hover:text-blue-600 font-medium">Skills</a></li>
+                <li><a href="#experience"
+                        class="block py-2 text-gray-700 hover:text-blue-600 font-medium">Experience</a></li>
+                <li><a href="#projects" class="block py-2 text-gray-700 hover:text-blue-600 font-medium">Projects</a>
+                </li>
+                <li><a href="#education" class="block py-2 text-gray-700 hover:text-blue-600 font-medium">Education</a>
+                </li>
+                <li><a href="#certifications"
+                        class="block py-2 text-gray-700 hover:text-blue-600 font-medium">Certifications</a></li>
+                <li><a href="#contact" class="block py-2 text-gray-700 hover:text-blue-600 font-medium">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero"
+        class="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 flex items-center justify-center text-white px-6 pt-20">
+        <div class="max-w-6xl text-center animate-fade-in-up">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">Shashikant D. Jituri</h1>
+            <p class="text-xl md:text-2xl mb-8 opacity-95 max-w-2xl mx-auto">
+                Software Developer | Full Stack | AI/ML Engineer
+            </p>
+            <div class="flex flex-wrap justify-center gap-6 mb-10 text-lg">
+                <div class="flex items-center gap-2"><i class="fas fa-envelope text-lg"></i>sdjituri@gmail.com</div>
+                <div class="flex items-center gap-2"><i class="fas fa-phone text-lg"></i>+91 8050530129</div>
+                <div class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-lg"></i>Hubli, Karnataka</div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#resume"
+                    class="px-8 py-4 rounded-full font-semibold text-lg shadow-2xl bg-white text-blue-600 hover:bg-blue-50 transform hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
+                    <i class="fas fa-file-pdf"></i>View Resume
+                </a>
+                <a href="#projects"
+                    class="bg-white/20 backdrop-blur-xl px-8 py-4 rounded-full font-semibold text-lg border-2 border-white/50 hover:bg-white hover:text-blue-600 transition-all duration-300 flex items-center gap-2">
+                    <i class="fas fa-rocket"></i>My Projects
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-20 gradient-text relative">
+                About Me
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto mt-4 rounded-full"></div>
+            </h2>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-center md:text-left">
+                    <img src="C:\Users\sdjit\OneDrive\Desktop\Shashikant.jpg" alt="Shashikant Jituri"
+                        class="w-80 h-80 rounded-full mx-auto md:mx-0 shadow-2xl border-8 border-white object-cover">
+                </div>
+                <div class="space-y-6">
+                    <h3 class="text-3xl font-bold gradient-text">Full Stack Developer & AI/ML Enthusiast</h3>
+                    <p class="text-lg leading-relaxed text-gray-700">
+                        Software Developer with hands-on experience in <strong class="text-blue-600">Java, Python, PHP,
+                            MySQL</strong> and Full Stack web development. Proven track record building real-time
+                        <strong class="text-purple-600">AI/ML systems</strong> and web applications.
+                    </p>
+                    <p class="text-lg leading-relaxed text-gray-700">
+                        Currently working as a <strong class="text-green-600">Lecturer at AGM Rural
+                            Polytechnic</strong>,
+                        shaping the next generation of engineers while actively pursuing opportunities
+                        to apply deep technical expertise in the IT industry.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6 mt-8">
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-2">Key Strengths</h4>
+                            <p class="text-blue-600 font-medium">Problem Solving, Teamwork, Communication</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-2">Hobbies</h4>
+                            <p class="text-green-600 font-medium">Cricket, Music, Drawing, Learning</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-20 gradient-text relative">
+                Technical Skills
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto mt-4 rounded-full"></div>
+            </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div
+                    class="bg-gradient-to-br from-blue-50 to-indigo-50 p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 border-t-8 border-blue-500 text-center group hover:-translate-y-2">
+                    <div class="text-5xl mb-6 group-hover:scale-110 transition-transform"><i
+                            class="fas fa-code text-blue-600"></i></div>
+                    <h3 class="text-2xl font-bold mb-6 gradient-text">Languages</h3>
+                    <ul class="space-y-3 text-lg font-medium">
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>C, C++</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>Core Java</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>Python</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>JavaScript</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>PHP</li>
+                    </ul>
+                </div>
+                <div
+                    class="bg-gradient-to-br from-purple-50 to-pink-50 p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 border-t-8 border-purple-500 text-center group hover:-translate-y-2">
+                    <div class="text-5xl mb-6 group-hover:scale-110 transition-transform"><i
+                            class="fas fa-laptop-code text-purple-600"></i></div>
+                    <h3 class="text-2xl font-bold mb-6 gradient-text">Web Tech</h3>
+                    <ul class="space-y-3 text-lg font-medium">
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>HTML5, CSS3</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>Bootstrap</li>
+                    </ul>
+                </div>
+                <div
+                    class="bg-gradient-to-br from-emerald-50 to-teal-50 p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 border-t-8 border-emerald-500 text-center group hover:-translate-y-2">
+                    <div class="text-5xl mb-6 group-hover:scale-110 transition-transform"><i
+                            class="fas fa-database text-emerald-600"></i></div>
+                    <h3 class="text-2xl font-bold mb-6 gradient-text">Database</h3>
+                    <ul class="space-y-3 text-lg font-medium">
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>MySQL</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>Oracle SQL</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>JDBC</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>Git</li>
+                    </ul>
+                </div>
+                <div
+                    class="bg-gradient-to-br from-orange-50 to-red-50 p-10 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 border-t-8 border-orange-500 text-center group hover:-translate-y-2">
+                    <div class="text-5xl mb-6 group-hover:scale-110 transition-transform"><i
+                            class="fas fa-brain text-orange-600"></i></div>
+                    <h3 class="text-2xl font-bold mb-6 gradient-text">AI/ML</h3>
+                    <ul class="space-y-3 text-lg font-medium">
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>Machine Learning</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>Prompt Engineering</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i>Data Structures</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-24 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-20 gradient-text relative">
+                Professional Experience
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto mt-4 rounded-full"></div>
+            </h2>
+            <div class="relative">
+                <div class="timeline-line"></div>
+                <div class="space-y-16">
+                    <div class="flex items-start gap-8 relative">
+                        <div class="timeline-dot"></div>
+                        <div
+                            class="flex-1 bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 ml-16">
+                            <div class="text-blue-600 font-semibold text-lg mb-2">Jul 2024 – Present</div>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">Lecturer</h3>
+                            <h4 class="text-xl font-semibold text-gray-600 mb-4">AGM Rural Polytechnic, Varur, Hubli
+                            </h4>
+                            <p class="text-gray-700 leading-relaxed">Conduct hands-on practical sessions and mentor
+                                students on academic projects in Computer Science.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-8 relative flex-row-reverse">
+                        <div class="timeline-dot"></div>
+                        <div
+                            class="flex-1 bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 mr-16">
+                            <div class="text-blue-600 font-semibold text-lg mb-2">Apr 2023 – May 2023</div>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">Web Development Intern</h3>
+                            <h4 class="text-xl font-semibold text-gray-600 mb-4">InternPe</h4>
+                            <p class="text-gray-700 leading-relaxed">Built and maintained web applications using HTML,
+                                CSS, JavaScript, and PHP.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-8 relative">
+                        <div class="timeline-dot"></div>
+                        <div
+                            class="flex-1 bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 ml-16">
+                            <div class="text-blue-600 font-semibold text-lg mb-2">Apr 2023 – May 2023</div>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">AI/ML Intern</h3>
+                            <h4 class="text-xl font-semibold text-gray-600 mb-4">YBI Foundation</h4>
+                            <p class="text-gray-700 leading-relaxed">Developed Artificial Intelligence and Machine
+                                Learning solutions using Python.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-20 gradient-text relative">
+                Featured Projects
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto mt-4 rounded-full"></div>
+            </h2>
+            <div class="grid md:grid-cols-2 xl:grid-cols-2 gap-8">
+                <div
+                    class="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-3xl transition-all duration-500 hover:-translate-y-4 border-t-8 border-blue-500">
+                    <div class="h-64 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                        <i class="fas fa-microphone text-6xl text-white"></i>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Voice Controlled Web App</h3>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span
+                                class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">Java</span>
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">Spring
+                                Boot</span>
+                            <span
+                                class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">MySQL</span>
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Speech
+                                API</span>
+                        </div>
+                        <p class="text-gray-700 mb-6">Voice-based registration and login system using modern web
+                            technologies.</p>
+                    </div>
+                </div>
+                <div
+                    class="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-3xl transition-all duration-500 hover:-translate-y-4 border-t-8 border-emerald-500">
+                    <div class="h-64 bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+                        <i class="fas fa-helmet-safety text-6xl text-white"></i>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Helmet & Number Plate Detection</h3>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span
+                                class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">Python</span>
+                            <span
+                                class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">OpenCV</span>
+                            <span
+                                class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">YOLOv5</span>
+                        </div>
+                        <p class="text-gray-700 mb-6">Real-time helmet violation detection with automatic number plate
+                            capture.</p>
+                    </div>
+                </div>
+                <div
+                    class="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-3xl transition-all duration-500 hover:-translate-y-4 border-t-8 border-purple-500">
+                    <div class="h-64 bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
+                        <i class="fas fa-robot text-6xl text-white"></i>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Smart Chatbot Portal</h3>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span
+                                class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">HTML/CSS/JS</span>
+                            <span
+                                class="bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-sm font-medium">PHP</span>
+                            <span
+                                class="bg-cyan-100 text-cyan-800 px-3 py-1 rounded-full text-sm font-medium">MySQL</span>
+                        </div>
+                        <p class="text-gray-700 mb-6">Chatbot-powered educational portal for students and teachers.</p>
+                    </div>
+                </div>
+                <div
+                    class="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-3xl transition-all duration-500 hover:-translate-y-4 border-t-8 border-green-500">
+                    <div class="h-64 bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                        <i class="fas fa-store text-6xl text-white"></i>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-4 text-gray-800">Farmers Market Platform</h3>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span
+                                class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">HTML/CSS/JS</span>
+                            <span
+                                class="bg-lime-100 text-lime-800 px-3 py-1 rounded-full text-sm font-medium">Bootstrap</span>
+                            <span
+                                class="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-medium">PHP</span>
+                            <span
+                                class="bg-sky-100 text-sky-800 px-3 py-1 rounded-full text-sm font-medium">MySQL</span>
+                        </div>
+                        <p class="text-gray-700 mb-6">Farmer-to-consumer marketplace connecting local producers with
+                            buyers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="py-24 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-20 gradient-text relative">
+                Education
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto mt-4 rounded-full"></div>
+            </h2>
+            <div class="relative">
+                <div class="timeline-line"></div>
+                <div class="space-y-16">
+                    <div class="flex items-start gap-8 relative">
+                        <div class="timeline-dot"></div>
+                        <div
+                            class="flex-1 bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 ml-16">
+                            <div class="text-blue-600 font-semibold text-lg mb-2">2024</div>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">B.E. Computer Science & Engineering</h3>
+                            <h4 class="text-xl font-semibold text-gray-600 mb-3">SDM College of Engineering and
+                                Technology, Dharwad</h4>
+                            <p class="text-2xl font-bold text-green-600 mb-2">CGPA: 6.17</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-8 relative flex-row-reverse">
+                        <div class="timeline-dot"></div>
+                        <div
+                            class="flex-1 bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 mr-16">
+                            <div class="text-blue-600 font-semibold text-lg mb-2">2021</div>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">Diploma in Computer Science & Engineering
+                            </h3>
+                            <h4 class="text-xl font-semibold text-gray-600 mb-3">Government Polytechnic, Mundagoda</h4>
+                            <p class="text-2xl font-bold text-green-600 mb-2">86.83%</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-8 relative">
+                        <div class="timeline-dot"></div>
+                        <div
+                            class="flex-1 bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 ml-16">
+                            <div class="text-blue-600 font-semibold text-lg mb-2">2017</div>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">ITI</h3>
+                            <h4 class="text-xl font-semibold text-gray-600 mb-3">Government ITI, Vidya Nagar, Hubli</h4>
+                            <p class="text-2xl font-bold text-green-600 mb-2">70.64%</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-8 relative flex-row-reverse">
+                        <div class="timeline-dot"></div>
+                        <div
+                            class="flex-1 bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 mr-16">
+                            <div class="text-blue-600 font-semibold text-lg mb-2">2014</div>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">SSLC</h3>
+                            <h4 class="text-xl font-semibold text-gray-600 mb-3">Basel Mission Higher Secondary School,
+                                Hubli</h4>
+                            <p class="text-2xl font-bold text-green-600 mb-2">62.24%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         CERTIFICATIONS SECTION — Cards + Embedded PDF Viewer
+    ============================================================ -->
+    <section id="certifications" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-6 gradient-text relative">
+                Certifications
+                <div class="w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto mt-4 rounded-full"></div>
+            </h2>
+            <p class="text-center text-gray-500 mb-16 text-lg">Click any certificate card to view the PDF below</p>
+
+            <!-- Certificate selector tabs -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12" id="cert-tabs">
+
+                <!-- CERTIFICATE 1 -->
+                <div class="cert-tab active bg-white rounded-2xl p-6 border-2 border-gray-100 shadow-md text-center"
+                    data-index="0" onclick="showCert(0)">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-sm leading-tight mb-2">AI Foundations Associate</h3>
+                    <span class="cert-badge bg-blue-100 text-blue-700"><i class="fas fa-building text-xs"></i> Oracle
+                        University</span>
+                    <p class="text-xs text-gray-400 mt-2 font-medium">2025</p>
+                </div>
+
+                <!-- CERTIFICATE 2 -->
+                <div class="cert-tab bg-white rounded-2xl p-6 border-2 border-gray-100 shadow-md text-center"
+                    data-index="1" onclick="showCert(1)">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-sm leading-tight mb-2">Full Stack Java Development</h3>
+                    <span class="cert-badge bg-emerald-100 text-emerald-700"><i class="fas fa-building text-xs"></i> Tap
+                        Academy</span>
+                    <p class="text-xs text-gray-400 mt-2 font-medium">2024</p>
+                </div>
+
+                <!-- CERTIFICATE 3 -->
+                <div class="cert-tab bg-white rounded-2xl p-6 border-2 border-gray-100 shadow-md text-center"
+                    data-index="2" onclick="showCert(2)">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-sm leading-tight mb-2">Cyber Security Foundation</h3>
+                    <span class="cert-badge bg-orange-100 text-orange-700"><i class="fas fa-building text-xs"></i>
+                        Infosys Springboard</span>
+                    <p class="text-xs text-gray-400 mt-2 font-medium">2026</p>
+                </div>
+
+                <!-- CERTIFICATE 4 -->
+                <div class="cert-tab bg-white rounded-2xl p-6 border-2 border-gray-100 shadow-md text-center"
+                    data-index="3" onclick="showCert(3)">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white text-2xl mx-auto mb-4">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-sm leading-tight mb-2">Basics of Python</h3>
+                    <span class="cert-badge bg-purple-100 text-purple-700"><i class="fas fa-building text-xs"></i>
+                        Infosys Springboard</span>
+                    <p class="text-xs text-gray-400 mt-2 font-medium">2023</p>
+                </div>
+
+            </div>
+
+            <!-- PDF Viewer Panel -->
+            <div class="bg-gray-50 rounded-3xl p-6 md:p-10 border border-gray-200 shadow-inner">
+                <!-- Viewer header -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h3 id="cert-viewer-title" class="text-xl font-bold text-gray-800">AI Foundations Associate</h3>
+                        <p id="cert-viewer-sub" class="text-gray-500 text-sm">Oracle University · 2025</p>
+                    </div>
+                    <a id="cert-open-link" href="#" target="_blank"
+                        class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity shadow-md">
+                        <i class="fas fa-external-link-alt"></i> Open in new tab
+                    </a>
+                </div>
+
+                <!-- Embedded PDF -->
+                <div class="pdf-frame-wrapper">
+                    <div class="pdf-loading" id="pdf-loading">
+                        <div
+                            class="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4">
+                        </div>
+                        <p class="text-gray-500 font-medium">Loading certificate…</p>
+                    </div>
+                    <iframe id="cert-iframe" src="" title="Certificate PDF" allowfullscreen onload="onFrameLoad()">
+                    </iframe>
+                </div>
+
+                <!-- Navigation arrows -->
+                <div class="flex items-center justify-between mt-6">
+                    <button onclick="prevCert()"
+                        class="flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-gray-200 text-gray-600 font-semibold hover:border-blue-400 hover:text-blue-600 transition-all">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <span id="cert-counter" class="text-gray-400 text-sm font-medium">1 / 4</span>
+                    <button onclick="nextCert()"
+                        class="flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-gray-200 text-gray-600 font-semibold hover:border-blue-400 hover:text-blue-600 transition-all">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Resume Section -->
+    <section id="resume" class="py-24 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 text-white">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <div class="bg-white/10 backdrop-blur-xl rounded-3xl p-16 border border-white/20 shadow-2xl">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">View My Resume</h2>
+                <p class="text-xl md:text-2xl mb-12 opacity-90 max-w-2xl mx-auto leading-relaxed">
+                    Get my complete professional resume with detailed experience, projects, education, and
+                    certifications
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                    <a href="#"
+                        class="bg-white text-blue-600 px-12 py-6 rounded-2xl font-bold text-xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300 flex items-center gap-3 group">
+                        <i class="fas fa-file-pdf text-2xl group-hover:rotate-12 transition-transform"></i>
+                        View Resume (PDF)
+                    </a>
+                    <div class="text-lg opacity-90">
+                        <i class="fas fa-file-alt mr-2"></i>
+                        Updated: May 2026
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-gray-900 text-white">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-20 gradient-text relative">
+                Let's Connect
+                <div class="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto mt-6 rounded-full"></div>
+            </h2>
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="space-y-8">
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-4 p-4 bg-white/10 rounded-2xl backdrop-blur-sm">
+                            <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center text-xl">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-lg">Email</p>
+                                <a href="mailto:sdjituri@gmail.com"
+                                    class="text-blue-300 hover:text-white font-medium text-xl block">sdjituri@gmail.com</a>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 p-4 bg-white/10 rounded-2xl backdrop-blur-sm">
+                            <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center text-xl">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-lg">Phone</p>
+                                <a href="tel:+918050530129"
+                                    class="text-blue-300 hover:text-white font-medium text-xl block">+91 8050530129</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold mb-8">Connect on Social</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <a href="https://linkedin.com/in/shashikant-jituri-781251269" target="_blank"
+                            class="group bg-white/10 hover:bg-white/20 backdrop-blur-xl p-6 rounded-2xl border border-white/20 transition-all duration-300 flex items-center gap-4 hover:scale-105 hover:shadow-2xl">
+                            <div
+                                class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-blue-500 transition-colors">
+                                <i class="fab fa-linkedin"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold">LinkedIn</p>
+                                <p class="text-blue-300 text-sm">Connect with me</p>
+                            </div>
+                        </a>
+                        <a href="https://github.com/Shashikant29-Jituri" target="_blank"
+                            class="group bg-white/10 hover:bg-white/20 backdrop-blur-xl p-6 rounded-2xl border border-white/20 transition-all duration-300 flex items-center gap-4 hover:scale-105 hover:shadow-2xl">
+                            <div
+                                class="w-14 h-14 bg-gray-700 rounded-2xl flex items-center justify-center text-2xl group-hover:bg-gray-600 transition-colors">
+                                <i class="fab fa-github"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold">GitHub</p>
+                                <p class="text-blue-300 text-sm">View my code</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         JAVASCRIPT
+    ============================================================ -->
+    <script>
+        // ─── CERTIFICATE DATA ────────────────────────────────────────────
+        // Replace the driveUrl values with your actual Google Drive share links.
+        // HOW TO GET THE EMBED URL:
+        //   1. Upload your PDF to Google Drive
+        //   2. Right-click → Share → "Anyone with the link" → Copy link
+        //      Example link:  https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+        //   3. Convert to embed URL:
+        //      https://drive.google.com/file/d/FILE_ID/preview
+        //   (just change /view to /preview)
+
+        const certificates = [
+            {
+                title: "AI Foundations Associate",
+                issuer: "Oracle University",
+                year: "2025",
+                // ↓ Replace FILE_ID with your actual Google Drive file ID
+                embedUrl: "https://drive.google.com/file/d/1TwVfmvgG4phyqVS1wFVZG_UW9qFPQHEr/preview",
+                openUrl: "https://drive.google.com/file/d/1TwVfmvgG4phyqVS1wFVZG_UW9qFPQHEr/view?usp=drive_link"
+            },
+            {
+                title: "Full Stack Java Development",
+                issuer: "Tap Academy",
+                year: "2024",
+                embedUrl: "https://drive.google.com/file/d/1PVFq0iSU7kyl5tLcuNeniJDjWwPPyzcJ/preview",
+                openUrl: "https://drive.google.com/file/d/1PVFq0iSU7kyl5tLcuNeniJDjWwPPyzcJ/view?usp=drive_link"
+            },
+            {
+                title: "Cyber Security Foundation",
+                issuer: "Infosys Springboard",
+                year: "2026",
+                embedUrl: "https://drive.google.com/file/d/1kZ5VY8vNC6s9eJasfWVaYoJlgMYvsINX/preview",
+                openUrl: "https://drive.google.com/file/d/1kZ5VY8vNC6s9eJasfWVaYoJlgMYvsINX/view?usp=drive_link"
+            },
+            {
+                title: "Basics of Python",
+                issuer: "Infosys Springboard",
+                year: "2023",
+                embedUrl: "https://drive.google.com/file/d/16YH-ldDq9YZxMzMwe96zR1roOOBzlBv2/preview",
+                openUrl: "https://drive.google.com/file/d/16YH-ldDq9YZxMzMwe96zR1roOOBzlBv2/view?usp=drive_link"
+            }
+        ];
+
+        let currentCert = 0;
+
+        function showCert(index) {
+            currentCert = index;
+            const cert = certificates[index];
+
+            // Update iframe
+            const iframe = document.getElementById('cert-iframe');
+            const loading = document.getElementById('pdf-loading');
+            loading.classList.remove('hidden');
+            iframe.src = cert.embedUrl;
+
+            // Update title & link
+            document.getElementById('cert-viewer-title').textContent = cert.title;
+            document.getElementById('cert-viewer-sub').textContent = `${cert.issuer} · ${cert.year}`;
+            document.getElementById('cert-open-link').href = cert.openUrl;
+
+            // Update counter
+            document.getElementById('cert-counter').textContent = `${index + 1} / ${certificates.length}`;
+
+            // Update active tab
+            document.querySelectorAll('.cert-tab').forEach((tab, i) => {
+                tab.classList.toggle('active', i === index);
+            });
+
+            // Scroll to viewer smoothly
+            document.querySelector('.pdf-frame-wrapper').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function onFrameLoad() {
+            document.getElementById('pdf-loading').classList.add('hidden');
+        }
+
+        function nextCert() {
+            showCert((currentCert + 1) % certificates.length);
+        }
+
+        function prevCert() {
+            showCert((currentCert - 1 + certificates.length) % certificates.length);
+        }
+
+        // Load first certificate on page ready
+        window.addEventListener('DOMContentLoaded', () => {
+            showCert(0);
+        });
+
+        // ─── EXISTING SCRIPTS ────────────────────────────────────────────
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        window.addEventListener('scroll', () => {
+            document.querySelector('nav').classList.toggle('shadow-lg', window.scrollY > 100);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('animate-fade-in-up');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+        document.querySelector('#resume a[href="#"]').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open('https://drive.google.com/file/d/1aQnEM6rrQecXLn0ocCOqP-gY0L2NUQvC/view?usp=drive_link', '_blank');
+        });
+    </script>
+</body>
+
+</html>
